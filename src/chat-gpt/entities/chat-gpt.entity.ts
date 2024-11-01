@@ -11,15 +11,15 @@ export class chat_gpt {
     @Column()
     descripcion: string;
     @Column()
-    metas: string;
+    metas?: string;
     @Column()
-    presupuesto: string;
+    presupuesto?: string;
     @Column()
-    tono: string;
+    tono?: string;
     @Column()
     nombreCliente: string;
     @Column()
-    nombreEmpresa: string;
+    nombreEmpresa?: string;
     @Column()
     telefono: string;
     @Column()

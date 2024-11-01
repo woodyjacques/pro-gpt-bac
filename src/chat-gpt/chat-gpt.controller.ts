@@ -27,7 +27,6 @@ export class ChatGptController {
   @Patch(':id')
   async updateFavorito(@Param('id') id: number, @Body() updateData: { favorito: boolean; email: string }) {
     const { favorito, email } = updateData;
-    console.log(favorito, email);
     return this.chatGptService.updateFavorito(id, favorito, email);
   }
 }
