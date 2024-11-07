@@ -9,7 +9,7 @@ export class EmailproService {
 
   async create(data: { text: string; email: string; emailUser: string }) {
     const { text, email, emailUser } = data;
-    const url = `https://briefly1.netlify.app/login`;
+    const url = `https://briefly.com.do/login`;
     const filePath = path.resolve(process.cwd(), 'src/auth/html/plantillaPro.html');
 
     const htmlTemplate = fs.readFileSync(filePath, 'utf8');

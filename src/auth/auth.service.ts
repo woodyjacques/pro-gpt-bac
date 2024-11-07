@@ -161,12 +161,12 @@ export class AuthService {
     let filePath: string;
 
     if (correo == "register") {
-      url = `https://briefly1.netlify.app/login?token=${token}`;
+      url = `https://briefly.com.do/login?token=${token}`;
       filePath = path.resolve(process.cwd(), 'src/auth/html/plantillaReg.html');
     }
 
     if (correo == "verificacion") {
-      url = `https://briefly1.netlify.app/password?token=${token}`;
+      url = `https://briefly.com.do/password?token=${token}`;
       filePath = path.resolve(process.cwd(), 'src/auth/html/plantilla.html');
     }
 
