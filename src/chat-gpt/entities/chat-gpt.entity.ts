@@ -12,18 +12,6 @@ export class chat_gpt {
     descripcion: string;
     @Column()
     metas?: string;
-    @Column()
-    presupuesto?: string;
-    @Column()
-    tono?: string;
-    @Column()
-    nombreCliente: string;
-    @Column()
-    nombreEmpresa?: string;
-    @Column()
-    telefono: string;
-    @Column()
-    correo: string;
     @Column() 
     favorito: boolean;
 }

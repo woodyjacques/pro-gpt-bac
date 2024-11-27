@@ -16,38 +16,38 @@ export class ChatGptService {
   ) { }
 
   async create(createChatDto: CreateChatGptDto): Promise<string> {
-    const { email, titulo, descripcion, metas, presupuesto, tono, nombreCliente, nombreEmpresa, telefono, correo } = createChatDto;
+    const { email, descripcion, metas } = createChatDto;
 
     const prompt = `
-      Actúa como un asistente experto en la creación de propuestas de negocios y genera una propuesta de alta calidad, estructurada y detallada para presentar a un cliente potencial. La propuesta debe utilizar un estilo claro y profesional sin asteriscos, negritas ni formato markdown. Incluye todos los datos proporcionados y divide la propuesta en las siguientes secciones:
-  
-      Propuesta de Negocio: ${titulo}
-  
-      Introducción:
-      Introduce el proyecto "${titulo}" destacando su importancia y propósito dentro del mercado o comunidad objetivo. Explica de manera atractiva cómo este proyecto responde a una necesidad o problema existente. Enfatiza la visión general del proyecto y cómo podría tener un impacto positivo en el crecimiento o bienestar del cliente. Explica también la alineación del proyecto con los valores de ${nombreEmpresa}, y resalta la oportunidad única de colaboración con ${nombreCliente}.
-  
-      Descripción detallada del proyecto:
-      Expón en detalle los elementos clave del proyecto: "${descripcion}". Describe los productos o servicios principales que se ofrecerán, incluyendo especificaciones únicas o innovaciones que lo diferencian de la competencia. Menciona las estrategias que se emplearán para asegurar que el proyecto destaque en el mercado, incluyendo métodos de operación, distribución, y control de calidad. Si es posible, detalla cómo el proyecto abordará los desafíos específicos del mercado actual y cómo estas soluciones incrementarán su valor. Proporciona ejemplos o escenarios que permitan visualizar el éxito potencial del proyecto.
-  
-      Objetivos específicos:
-      Define los objetivos clave que se esperan alcanzar a lo largo del proyecto. Incluye una lista de metas, como:
-      1. ${metas}.
-      Para cada objetivo, explica cómo este beneficiará directamente al cliente y los usuarios finales. Expón los resultados esperados y cualquier ventaja adicional que cada meta pueda ofrecer a largo plazo. Incluye además métricas de éxito o indicadores de rendimiento que se podrían usar para evaluar el avance del proyecto.
-  
-      Presupuesto detallado:
-      El presupuesto total para este proyecto es de ${presupuesto}. Ofrece un desglose de los costos clave en partidas, como adquisición de maquinaria, marketing, distribución, recursos humanos, y logística. Para cada área, explica cómo cada inversión respalda los objetivos generales del proyecto y contribuye a su viabilidad a largo plazo. Destaca también cualquier posible optimización o eficiencia en costos que se esté contemplando para maximizar el rendimiento de la inversión. Considera agregar ejemplos de costos en proyectos similares si es posible para dar contexto al cliente.
-  
-      Impacto a largo plazo y beneficios:
-      Añade una sección que destaque los beneficios a largo plazo que este proyecto ofrecerá al cliente, como oportunidades de expansión, reconocimiento de marca, y sostenibilidad en el mercado. Explica cómo este proyecto podría abrir puertas para futuras colaboraciones o para el crecimiento de la empresa en nuevas áreas. Menciona también los beneficios de trabajar con un equipo comprometido y experimentado que prioriza el éxito y la satisfacción del cliente.
-  
-      Datos de contacto del cliente:
-      Cliente: ${nombreCliente}.
-      Empresa: ${nombreEmpresa}.
-      Teléfono de contacto: ${telefono}.
-      Correo electrónico: ${correo}.
-      
-      Crea una propuesta profesional, detallada y convincente que despierte el interés del cliente en el proyecto y fomente una colaboración exitosa. Finaliza con un llamado a la acción invitando al cliente a discutir la propuesta en una reunión para detallar cualquier ajuste o solicitud adicional.
-    `;
+Actúa como un asistente especializado en la creación de propuestas de negocios.
+Por favor, crea una propuesta detallada siguiendo este modelo, **y sin utilizar asteriscos (*), guiones (-), ni ningún tipo de formato de texto (como negritas, listas con viñetas, etc.)**:
+
+1. Introducción:
+   Comienza con una introducción dirigida al cliente. Explica brevemente la importancia de los servicios ofrecidos y cómo estos ayudarán a alcanzar los objetivos del cliente.
+
+2. Objetivo:
+   Define el objetivo principal de la propuesta de forma clara y específica.
+
+3. Servicios ofrecidos:
+   Divide los servicios en secciones, cada una con:
+     - Un título descriptivo.
+     - Detalles del servicio (qué incluye, beneficios y cómo se implementará).
+     - Plazo estimado de entrega.
+     - Costo aproximado.
+
+4. Beneficios clave:
+   Resalta los beneficios más importantes que el cliente obtendrá al aceptar la propuesta.
+
+5. Conclusión:
+   Termina con una conclusión.
+
+Basado en los siguientes datos proporcionados:
+- Descripción del proyecto: ${descripcion}
+- Metas: ${metas}
+`;
+
+
+    const titulo = `Propuesta Integral: ${metas.split(" ")[0]} para ${email.split("@")[0]}`;
 
     try {
       const response: AxiosResponse = await lastValueFrom(
@@ -74,9 +74,9 @@ export class ChatGptService {
       let generatedDescription = response.data.choices[0].message?.content?.trim() || 'No se generó contenido válido.';
 
       generatedDescription = generatedDescription
-        .replace(/\bundefined\b/gi, '')    
-        .replace(/(\n|^)\s*[a-z]\s*(\n|$)/gi, '') 
-        .replace(/\s+$/, '')              
+        .replace(/\bundefined\b/gi, '')
+        .replace(/(\n|^)\s*[a-z]\s*(\n|$)/gi, '')
+        .replace(/\s+$/, '')
         .trim();
 
       if (/undefined/i.test(generatedDescription)) {
@@ -85,12 +85,10 @@ export class ChatGptService {
       }
 
       const newChat = this.chatRepository.create({
-        email, titulo, descripcion: generatedDescription, metas, presupuesto, tono, nombreCliente, nombreEmpresa, telefono, correo, favorito: false
+        email, titulo, descripcion: generatedDescription, metas, favorito: false
       });
 
       await this.chatRepository.save(newChat);
-
-      console.log(generatedDescription);
 
       return generatedDescription;
 
@@ -102,7 +100,6 @@ export class ChatGptService {
       }
       throw new Error('No se pudo generar la propuesta de negocio en este momento.');
     }
-
   }
 
   async findAllByEmail(email: string) {

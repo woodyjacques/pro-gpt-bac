@@ -15,12 +15,6 @@ CREATE TABLE chat_gpt (
     titulo VARCHAR(255) NOT NULL,
     descripcion TEXT NOT NULL,
     metas VARCHAR(255),
-    presupuesto VARCHAR(255),
-    tono VARCHAR(255),
-    nombreCliente VARCHAR(255) NOT NULL,
-    nombreEmpresa VARCHAR(255),
-    telefono VARCHAR(50) NOT NULL,
-    correo VARCHAR(255) NOT NULL,
     favorito BOOLEAN NOT NULL
 );
 
